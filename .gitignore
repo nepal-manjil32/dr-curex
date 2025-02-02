@@ -22,5 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 
 .DS_Store
+=======
+.DS_Store
+>>>>>>> d6fb799 (react files added)
