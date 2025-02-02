@@ -1,11 +1,7 @@
 {
-<<<<<<< HEAD
-  "name": "reswag",
-=======
   "name": "dr-curex",
->>>>>>> d6fb799 (react files added)
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
