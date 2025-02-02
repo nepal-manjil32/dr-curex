@@ -1,5 +1,5 @@
 # Dr. CureX (LLM-Enabled Health Care App)
-
+<img src='../dr-curex//src/assets/logo.png' width="10%">
 Dr. CureX is a healthcare application powered by Large Language Models (LLMs) to enhance patient interactions and provide intelligent health insights.
 
 ## 🚀 Tech Stack
