@@ -1,13 +1,29 @@
-<<<<<<< HEAD
-# Dr. CureX (LLM Enabled Health Care App)
+# Dr. CureX (LLM-Enabled Health Care App)
 
-=======
-# React + Vite
+Dr. CureX is a healthcare application powered by Large Language Models (LLMs) to enhance patient interactions and provide intelligent health insights.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Tech Stack
+- **React + Vite**: Fast and optimized front-end development.
+- **ESLint**: Ensures code quality and best practices.
+- **SWC/Babel**: Enables fast refresh and optimized build performance.
 
-Currently, two official plugins are available:
+## 🔥 Features
+- AI-powered health recommendations.
+- User-friendly and intuitive interface.
+- Secure and efficient data handling.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
->>>>>>> d6fb799 (react files added)
+## 🛠️ Installation & Setup
+Follow these steps to set up the project locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/nepal-manjil32/dr-curex.git
+
+# Navigate to the project directory
+cd dr-curex
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
