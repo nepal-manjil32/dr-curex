@@ -23,7 +23,7 @@ git clone https://github.com/nepal-manjil32/dr-curex.git
 cd dr-curex
 
 # Install dependencies
-npm install
+npm i
 
 # Run the development server
 npm run dev
