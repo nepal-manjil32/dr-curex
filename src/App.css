@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.landing-page{
+    display:flex;
+    flex-direction: row; 
+    margin: 1rem 5rem 2rem 5rem;
+}
+
+.landing-left img{
+    margin: 2rem;
+    padding: 2rem;
+    width: 25rem;
+    border-radius: 5rem;;
+}
+.landing-right{
+    align-items: center;
+    text-align: center;
+    margin: 1rem 5rem 1rem 5rem;
+}
+.landing-right h1{
+    font-weight: bolder;
+    margin: 3rem auto auto 2rem;
+}
+.landing-right h2{
+    margin: 2rem auto auto 2rem;
+}
+.landing-right h3{
+    font-weight: bold;
+}
+.landing-right p{
+    margin: 2rem auto auto 2rem;
+}
+.button-container {
+    display: flex;
+    flex-direction: row;  
+    gap: 5rem;  
+    margin: 5rem;  
+    justify-content: center;  
+    align-items: center; 
+}
+
+.getting-started,
+.read-more {
+    padding: 15px 30px;
+    border-radius: 1rem;
+    text-align: center;
+    background-color:  #4CAF50;
+}
+
+.getting-started a,
+.read-more a {
+    text-decoration: none;
+    color: white;
+}
