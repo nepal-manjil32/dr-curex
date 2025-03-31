@@ -1,9 +1,20 @@
 import React from "react";
+import Button from "react-bootstrap/Button"
+import {Link} from "react-router-dom"
+import Navbar from "./components/navbar/Navbar"
+import Hero from './components/hero/Hero'
+import About from './components/about/About'
+import Footer from './components/footer/Footer'
+import Testimonials from "./components/testimonials/Testimonials";
 
 const App = () => {
   return (
-    <div>
-        <h1>Home</h1>
+    <div className="App">
+      <Navbar />
+      <Hero />
+      <About />
+      <Testimonials />
+      <Footer />
     </div>
   );
 };
