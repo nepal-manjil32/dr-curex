@@ -1,45 +1,75 @@
-// import React from "react";
-// import { TextField, Button, Container, Typography, Box } from "@mui/material";
-// import { useNavigate } from "react-router-dom";
-
-// const Login = () => {
-//   const navigate = useNavigate();
-
-//   const handleLogin = () => {
-//     navigate("/dashboard");
-//   };
-  
-//   return (
-//     <Container maxWidth="xs">
-//       <Box
-//         sx={{
-//           marginTop: 8,
-//           display: "flex",
-//           flexDirection: "column",
-//           alignItems: "center",
-//         }}
-//       >
-//         <Typography variant="h5">Login</Typography>
-//         <TextField label="Email" fullWidth margin="normal" />
-//         <TextField label="Password" type="password" fullWidth margin="normal" />
-//         <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }} onClick={handleLogin}>
-//           Login
-//         </Button>
-//         <Typography variant="body2" sx={{ mt: 2 }}>
-//           Don't have an account? <a href="/signup">Sign Up</a>
-//         </Typography>
-//       </Box>
-//     </Container>
-//   );
-// };
-
-// export default Login;
-import React from 'react'
+import React, { useState } from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import "./Login.css";
 
 const Login = () => {
-  return (
-    <div>Login</div>
-  )
-}
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-export default Login
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Submitted:", formData);
+  };
+
+  return (
+    <Container fluid className="login-container">
+      <Row>
+        <Col md={6} className="login-left">
+          <img
+            src="src/assets/dr.webp"
+            alt="Doctor Illustration"
+            className="doctor-image"
+          />
+        </Col>
+
+        <Col md={6} className="login-right">
+          <div className="form-container">
+            <div className="login-title">
+              <h2>Login</h2>
+            </div>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="formEmail" className="mb-3">
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formPassword" className="mb-3">
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+              <div className="login-button-div">
+                <Button
+                  type="submit"
+                  variant="warning"
+                  className="login-button w-100"
+                >
+                  Login
+                </Button>
+              </div>
+            </Form>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default Login;
