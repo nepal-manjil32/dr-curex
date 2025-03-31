@@ -1,13 +1,13 @@
 import React from "react";
 
-const Dashboard = () => {
+const Landingpage = () => {
   return (
     <>
         <div className="component-container">
-            <h1>Hello, this is Dashboard!</h1>
+            <h1>Hello, this is LandingPage!</h1>
         </div>
     </>
   );
 };
 
-export default Dashboard;
+export default Landingpage;
