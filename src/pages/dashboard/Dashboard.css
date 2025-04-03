@@ -3,27 +3,6 @@
   min-height: 100vh;
 }
 
-/* .sidebar {
-    background-color: #f8f9fa;
-    border-right: 2px solid #dee2e6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-  }
-  
-  .logo {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .sidebar-item {
-    font-size: 1.5rem;
-    margin: 15px 0;
-    cursor: pointer;
-  } */
-
 .sidebar {
   background-color: #f8f9fa;
   border-right: 2px solid #dee2e6;

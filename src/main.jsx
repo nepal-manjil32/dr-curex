@@ -12,6 +12,7 @@ import Appointment from './pages/appointment/Appointment.jsx'
 import BPCheck from './pages/bpcheck/BPCheck.jsx'
 import Hospital from './pages/hospital/Hospital.jsx'
 import Remedies from './pages/remedies/Remedies.jsx'
+import Report from './pages/report/Report.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const router =  createBrowserRouter([
@@ -51,6 +52,10 @@ const router =  createBrowserRouter([
   {
     path: "/hospital",
     element: <Hospital />
+  },
+  {
+    path: "/report",
+    element: <Report />
   }
 ]);
 
