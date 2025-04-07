@@ -1,6 +1,6 @@
 # Dr.CureX: LLM Enabled AI-Health App 
 
-<img src="./src/assets/landing.png"/>
+<img src="./uploads/landing.png"/>
 
 ---
 
@@ -16,7 +16,7 @@ cd dr-curex
 npm i
 ```
 ```sh
-npm i nodemon react-bootstrap bootstrap react-scroll
+npm i nodemon react-bootstrap bootstrap react-scroll body-parser mongoose
 ```
 ### 3️⃣ Start the Development Server
 ```sh
