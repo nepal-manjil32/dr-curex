@@ -1,6 +1,7 @@
 .hero{
     margin: 0;
     padding: 0;
+    position: static;
 }
 
 .doctor{

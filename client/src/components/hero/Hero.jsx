@@ -29,11 +29,11 @@ const Hero = () => {
             </p>
 
             <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-              <Link to="/signup" className="btn btn-lg px-4 me-md-2 read-more">
+              <Link to="/signup" className="btn btn-lg px-4 me-md-2 read-more" style={{ backgroundColor: "#4CAF50", color: "white" }}>
                 Get Started
               </Link>
               
-              <Link to="/about" className="btn btn-lg px-4 get-started">
+              <Link to="/about" className="btn btn-lg px-4 get-started" style={{ backgroundColor: "#FF6F00", color: "white" }}>
                 Read More
               </Link>
             </div>
