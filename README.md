@@ -1,6 +1,6 @@
 # Dr.CureX: LLM Enabled AI-Health App 
 
-<img src="./uploads/landing.png"/>
+<img src="client/src/assets/landing.png"/>
 
 ---
 
@@ -14,9 +14,6 @@ cd dr-curex
 ### 2️⃣ Install Required Dependencies:  
 ```sh
 npm i
-```
-```sh
-npm i nodemon react-bootstrap bootstrap react-scroll body-parser mongoose
 ```
 ### 3️⃣ Start the Development Server
 ```sh
