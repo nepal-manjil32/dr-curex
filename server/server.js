@@ -8,15 +8,16 @@ import userRouter from "./routes/userRoute.js";
 
 //configuration
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 connectDB();
 connectCloudinary();
+const allowedOrigins = ['http://localhost:5173']
 
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({credentials: true}));
+app.use(cors({origin: allowedOrigins, credentials: true}));
 
 //endpoints
 app.use('/api/user', userRouter);

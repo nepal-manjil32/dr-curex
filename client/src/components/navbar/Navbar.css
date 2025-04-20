@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     /* background-color: red; */
+    position: fixed;
 }
 
 .container{
@@ -22,8 +23,8 @@ header{
     align-items: center;
 }
 
-.logo{
-    width: 20%;
+.logo img{
+    width: 30%;
 }
 
 .nav-link{

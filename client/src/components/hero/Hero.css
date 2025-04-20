@@ -1,42 +1,71 @@
 .hero{
-    margin: 0;
-    padding: 0;
-    position: static;
+    height: 90vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.doctor{
-    border-radius: 25px;
+.left{
+    margin-top: 10rem;
+    width: 40vw;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.left img{
+    width: 90%;
+    border-radius: 20px;
+}
 
-.hero-div{
+h4{
+    font-weight: 400;
+}
+
+.right{
+    margin-top: 10rem;
+    text-align: center;
+    width: 60vw;
+    height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    text-align: center;
+    gap: 1rem;
+    padding: 50px;
 }
 
-.read-more{
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
-}
-
-.read-more:hover{
-    background-color: #ffffff;
-    color: #4CAF50;
-    border: 1px solid #4CAF50;
+.right > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 .get-started{
-    background-color: #FF6F00;
     color: white;
-    border: 1px solid #FF6F00;
+    border-radius: 8px;
+    padding: 10px;
+    text-decoration: none;
+    background-color: #FF6F00;
 }
 
 .get-started:hover{
-    background-color: #ffffff;
-    color: #FF6F00;
-    border: 1px solid #FF6F00;
+    background-color: #d65f03;
+}
+
+
+.learn-more{
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-decoration: none;
+    background-color: #4CAF50;
+}
+
+.learn-more:hover{
+    color: white;
+    background-color: #30a334;
 }

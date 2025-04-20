@@ -11,7 +11,7 @@
   }
   
   .doctor-image {
-    max-width: 80%;
+    width: 80%;
     border-radius: 2rem;
   }
   
@@ -38,16 +38,20 @@
   }
   
   .login-button-div {
+    width: 100%;
     display: flex;
     justify-content: center;
   }
+
   
   .login-button {
+    border: 5x solid #ff6600;
+    width: 100%;
     background-color: #ff6600;
     color: white;
   }
   
   .login-button:hover {
+    border: 1x solid #ff6600;
     background-color: #e65c00;
   }
-  

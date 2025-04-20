@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
-import userModel from '../models/userModel.js';
 import transporter from '../config/nodemailer.js';
+import userModel from '../models/userModel.js';
 
-const createToken = (id, isAdmin) => {
-    return jwt.sign({ id, isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
+const createToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
 //Controller for student login
@@ -16,18 +16,18 @@ const loginUser = async (req, res) => {
 
         const user = await userModel.findOne({ email });
 
-        if (!user || user.isAdmin) {
-            return res.status(400).json({ succuss: false, message: "User does not exist!" })
+        if (!user) {
+            return res.status(400).json({ success: false, message: "User does not exist!" })
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(400).json({ succuss: false, message: "Incorrect password!" })
+            return res.status(400).json({ success: false, message: "Incorrect password!" })
         }
 
         //JWT token
-        const token = createToken(user._id, user.isAdmin);
+        const token = createToken(user._id);
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -46,10 +46,10 @@ const loginUser = async (req, res) => {
 
         // await transporter.sendMail(mailOptions);
 
-        res.status(200).json({ succuss: true, message: "User logged in successfully!", token })
+        res.status(200).json({ success: true, message: "User logged in successfully!", token })
 
     } catch (error) {
-        res.status(500).json({ succuss: false, message: error.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 
@@ -64,14 +64,14 @@ const registerUser = async (req, res) => {
         const userExists = await userModel.findOne({ email });
 
         if (userExists) {
-            return res.status(400).json({ succuss: false, message: "User already exists!" })
+            return res.status(400).json({ success: false, message: "User already exists!" })
         }
 
         if (!validator.isEmail(email)) {
-            return res.status(400).json({ succuss: false, message: "Please enter a valid email" })
+            return res.status(400).json({ success: false, message: "Please enter a valid email" })
         }
         if (!validator.isStrongPassword(password, { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 })) {
-            return res.status(400).json({ succuss: false, message: "Please enter a strong password with at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 number and 1 symbol" })
+            return res.status(400).json({ success: false, message: "Please enter a strong password with at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 number and 1 symbol" })
         }
 
         const newUser = new userModel({
@@ -111,11 +111,11 @@ const registerUser = async (req, res) => {
         await transporter.sendMail(mailOptions);
 
 
-        res.status(201).json({ succuss: true, message: "User registered successfully!", token })
+        res.status(201).json({ success: true, message: "User registered successfully!", token })
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ succuss: false, message: error.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 
