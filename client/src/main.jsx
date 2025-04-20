@@ -10,6 +10,7 @@ import Signup from './pages/signup/Signup.jsx'
 import Dashboard from './pages/dashboard/Dashboard.jsx'
 import Remedies from './pages/remedies/Remedies.jsx'
 import BMI from './pages/bmi/BMI.jsx'
+import NearbyHospitals from './pages/nearby-hospitals/NearbyHospitals.jsx'
 
 
 const router =  createBrowserRouter([
@@ -37,6 +38,10 @@ const router =  createBrowserRouter([
   {
     path: "/dashboard/bmi",
     element: <BMI />
+  },
+  {
+    path: "/dashboard/nearby-hospitals",
+    element: <NearbyHospitals />
   }
 ]);
 

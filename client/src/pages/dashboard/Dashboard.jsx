@@ -67,7 +67,7 @@ const Dashboard = () => {
           <Card 
             name="Nearby Hospital"
             imageSrc = {hospital}
-            linkTO = "/dashboard/remedies"
+            linkTO = "/dashboard/nearby-hospitals"
           />
           <Card 
             name="Schedule"
