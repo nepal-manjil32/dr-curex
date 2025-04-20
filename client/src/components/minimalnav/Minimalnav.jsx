@@ -14,8 +14,8 @@ const Navbar = () => {
           </div>
         
           <div className="col-md-3 text-end">
-            <Link to="/dashboard" className="btn me-2" style={{ backgroundColor: "#4CAF50", color: "white" }}>Dashboard</Link>
-            <Link to="/" className="btn" style={{ backgroundColor: "#FF6F00", color: "white" }}>Log Out</Link>
+            <Link to="/dashboard" className="btn me-2" style={{ backgroundColor: "#FF6F00", color: "white" }}>Dashboard</Link>
+            <Link to="/" className="btn" style={{ backgroundColor: "red", color: "white" }}>Log Out</Link>
           </div>
         </header>
       </div>

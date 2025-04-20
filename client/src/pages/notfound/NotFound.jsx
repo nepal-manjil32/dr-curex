@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Notfound.css';
-import image from '../../assets/prayash-1.jpeg';
+import image from '../../assets/demo-user.png';
 
 const Notfound = () => {
   return (

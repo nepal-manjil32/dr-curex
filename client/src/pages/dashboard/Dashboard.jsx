@@ -10,7 +10,10 @@ import bp from '../../assets/icons/bp-check.png'
 import logo from '../../assets/logo.png'
 import {Link} from 'react-router-dom'
 import News from '../../components/news/News.jsx'
-import user from '../../assets/prayash-1.jpeg';
+import user from '../../assets/demo-user.png';
+import Appointment from '../../components/appointment/Appointment.jsx'
+import Greeting from '../../components/greeting/Greeting.jsx'
+import Profile from '../../components/profile/Profile.jsx'
 
 const Dashboard = () => {
   const currentDate = new Date().toLocaleDateString("en-US", {
@@ -32,29 +35,17 @@ const Dashboard = () => {
         </div>
 
         <div class="profile">
-        <div class="user-img">
-          <img src={user} alt="User" />
+            <Profile
+              imgsrc = {user}
+              name = "Mr Happy Man"
+              dob = "1992-05-10"
+              blood = "O+"
+              city = "Amaravati"
+              state = "Andhra Pradesh"
+            />
+
         </div>
-        <div class="user-details">
-          <h2 class="user-name">Mr. Happy Man</h2>
-          <div class="user-info">
-            <span class="info-label">DOB:</span>
-            <span class="info-value">2000-01-02</span>
-          </div>
-          <div class="user-info">
-            <span class="info-label">Gender:</span>
-            <span class="info-value">Male</span>
-          </div>
-          <div class="user-info">
-            <span class="info-label">Blood:</span>
-            <span class="info-value">O+</span>
-          </div>
-          <div class="user-info">
-            <span class="info-label">Address:</span>
-            <span class="info-value">XYZ, ABC</span>
-          </div>
-        </div>
-      </div>
+
 
         <div className='log-out'>
             <Link to="/" className='log-out-btn'>Log Out</Link>
@@ -77,8 +68,8 @@ const Dashboard = () => {
             ) : (
               <h6>🌆 Good Night</h6>
             )}
-        </div>
-          </div>
+            </div>
+          </div>  
         </div>
 
 
@@ -101,27 +92,55 @@ const Dashboard = () => {
           <Card 
             name="Schedule"
             imageSrc = {doctor}
-            linkTO = "/dashboard/remedies"
+            linkTO = "/dashboard/schedule"
           />
           <Card 
             name="Book Ambulance"
             imageSrc = {ambulance}
-            linkTO = "/dashboard/remedies"
+            linkTO = "/dashboard/ambulance"
           />
           <Card 
             name="Coming Soon"
             imageSrc = {bp}
-            linkTO = "/dashboard/remedies"
+            linkTO = "/dashboard/soon"
           />
         </div>
 
         <div className="lower">
+          <p className="lower-title">Upcoming Appointments</p>
+          <div className="appoint">
+            <Appointment 
+              date="Mon, Apr 21" 
+              time="12:00 PM"
+              doctor="Dr. Stephen Hawking"
+              location="London Road, London"
+              desc="Piles"
+            />
 
+            <Appointment 
+              date="Mon, Apr 21"
+              time="12:00 PM"
+              doctor="Dr. Donald Trump"
+              desc="Piles"
+              location="Washington DC, Columbia"
+              id="APT-00123"
+            />
+
+            <Appointment 
+              date="Mon, Apr 21"
+              time="12:00 PM"
+              doctor="Dr. Valdimir Putin"
+              desc="Piles"
+              location="Kremlin, Saint Petersburg"
+              id="APT-00124"
+            />
+
+          </div>
         </div>
+
       </div>
 
       <div className="rightComponent">
-          {/* <div className="profile"></div> */}
           <div className="news" style={{overflowY: 'auto' }}>
             <News />
           </div>
