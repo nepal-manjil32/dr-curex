@@ -10,6 +10,7 @@ import bp from '../../assets/icons/bp-check.png'
 import logo from '../../assets/logo.png'
 import {Link} from 'react-router-dom'
 import News from '../../components/news/News.jsx'
+import user from '../../assets/prayash-1.jpeg';
 
 const Dashboard = () => {
   const currentDate = new Date().toLocaleDateString("en-US", {
@@ -25,10 +26,38 @@ const Dashboard = () => {
   return (
     <div className='dashboard'>
       <div className="leftComponent">
-        <div className='img-div'><img src={logo} alt="logo" /></div>
-        <div className='side-bar'>
-          <Link to="/shsh" className='link-img'><img src="https://cdn-icons-png.flaticon.com/128/484/484562.png" alt="" /></Link>
-          <Link to="/" className='link-img'><img src="https://cdn-icons-png.flaticon.com/128/15527/15527278.png" alt="" /></Link>
+
+        <div className='img-div'>
+          <img src={logo} alt="logo" />
+        </div>
+
+        <div class="profile">
+        <div class="user-img">
+          <img src={user} alt="User" />
+        </div>
+        <div class="user-details">
+          <h2 class="user-name">Mr. Happy Man</h2>
+          <div class="user-info">
+            <span class="info-label">DOB:</span>
+            <span class="info-value">2000-01-02</span>
+          </div>
+          <div class="user-info">
+            <span class="info-label">Gender:</span>
+            <span class="info-value">Male</span>
+          </div>
+          <div class="user-info">
+            <span class="info-label">Blood:</span>
+            <span class="info-value">O+</span>
+          </div>
+          <div class="user-info">
+            <span class="info-label">Address:</span>
+            <span class="info-value">XYZ, ABC</span>
+          </div>
+        </div>
+      </div>
+
+        <div className='log-out'>
+            <Link to="/" className='log-out-btn'>Log Out</Link>
         </div>
       </div>
 
@@ -38,8 +67,7 @@ const Dashboard = () => {
           <div>
             <h1>Health Overview</h1>
             <h5>{currentDate}</h5>
-          </div>
-          <div>
+            <div>
             {hour < 12 ? (
               <h6>🌅 Good Morning</h6>
             ) : hour < 18 ? (
@@ -50,6 +78,7 @@ const Dashboard = () => {
               <h6>🌆 Good Night</h6>
             )}
         </div>
+          </div>
         </div>
 
 
