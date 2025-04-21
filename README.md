@@ -1,8 +1,10 @@
 # Dr.CureX: LLM Enabled AI-Health App 
 
 <img src="client/src/assets/landing.png"/>
-
 ---
+<img src="client/src/assets/dashboard.png"/>
+---
+
 
 ## 📦 Installation Guide  
 
