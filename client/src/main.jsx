@@ -14,6 +14,7 @@ import Layout from "./Layout.jsx";
 import { AppContextProvider } from "./context/AppContext.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Appointment from "./pages/appointment/Appointment.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "bmi",
         element: <BMI />,
+      },
+      {
+        path: "appointment",
+        element: <Appointment />,
       },
       {
         path: "nearby-hospitals",

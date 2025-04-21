@@ -8,6 +8,20 @@ const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
+const getUser = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user._id, 'name email city stateAddress gender bloodGroup age');
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        if (user) {
+            res.status(200).json({ success: true, userData: { _id: user._id, name: user.name, email: user.email, city:user.city, stateAddress:user.stateAddress, gender:user.gender, bloodGroup:user.bloodGroup, age:user.age } });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 //Controller for student login
 const loginUser = async (req, res) => {
     try {
@@ -139,58 +153,58 @@ const logout = async (req, res) => {
 }
 
 //Controller to verify email
-const verifyEmail = async (req, res) => {
-    const { userId, otp } = req.body;
+// const verifyEmail = async (req, res) => {
+//     const { userId, otp } = req.body;
 
-    if (!userId || !otp) {
-        return res.status(400).json({ success: false, message: "Please provide User ID and OTP" });
-    }
-    try {
+//     if (!userId || !otp) {
+//         return res.status(400).json({ success: false, message: "Please provide User ID and OTP" });
+//     }
+//     try {
 
-        const user = await userModel.findById(userId);
-        if (!user) {
-            return res.status(400).json({ success: false, message: "User does not exist!" });
-        }
+//         const user = await userModel.findById(userId);
+//         if (!user) {
+//             return res.status(400).json({ success: false, message: "User does not exist!" });
+//         }
 
-        if (user.isAccountVerified) {
-            return res.status(400).json({ success: false, message: "Account already verified!" });
-        }
+//         if (user.isAccountVerified) {
+//             return res.status(400).json({ success: false, message: "Account already verified!" });
+//         }
 
-        if (user.verifyOtp === '' || user.verifyOtp !== otp) {
-            return res.status(400).json({ success: false, message: "Invalid OTP!" });
-        }
+//         if (user.verifyOtp === '' || user.verifyOtp !== otp) {
+//             return res.status(400).json({ success: false, message: "Invalid OTP!" });
+//         }
 
-        if (Date.now() > user.verifyOtpExpireAt) {
-            return res.status(400).json({ success: false, message: "OTP expired!" });
-        }
+//         if (Date.now() > user.verifyOtpExpireAt) {
+//             return res.status(400).json({ success: false, message: "OTP expired!" });
+//         }
 
-        user.isAccountVerified = true;
-        user.verifyOtp = '';
-        user.verifyOtpExpireAt = 0;
-        await user.save();
+//         user.isAccountVerified = true;
+//         user.verifyOtp = '';
+//         user.verifyOtpExpireAt = 0;
+//         await user.save();
 
-        const mailOption = {
-            from: process.env.SENDER_EMAIL,
-            to: user.email,
-            subject: "Account Verified",
-            text: `Your account has been verified successfully!`
-        }
+//         const mailOption = {
+//             from: process.env.SENDER_EMAIL,
+//             to: user.email,
+//             subject: "Account Verified",
+//             text: `Your account has been verified successfully!`
+//         }
 
-        await transporter.sendMail(mailOption);
+//         await transporter.sendMail(mailOption);
 
-        res.status(200).json({ success: true, message: "Account verified successfully!" });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-}
+//         res.status(200).json({ success: true, message: "Account verified successfully!" });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: error.message });
+//     }
+// }
 
 //Connection to check if user is authenticated or not
-const isAuthenticated = async (req, res) => {
-    try {
-        return res.status(200).json({ success: true, message: "User is authenticated!" });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-}
+// const isAuthenticated = async (req, res) => {
+//     try {
+//         return res.status(200).json({ success: true, message: "User is authenticated!" });
+//     } catch (error) {
+//         res.status(500).json({ success: false, message: error.message });
+//     }
+// }
 
-export { loginUser, registerUser, logout, verifyEmail, isAuthenticated };
+export {getUser, loginUser, registerUser, logout };
