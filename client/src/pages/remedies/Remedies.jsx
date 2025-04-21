@@ -6,7 +6,7 @@ import ChatBot from '../../components/chatbot/ChatBot'
 const Remedies = () => {
   return (
     <div className='remedies'>
-      <Minimalnav />
+      {/* <Minimalnav /> */}
       <ChatBot />
     </div>
   )

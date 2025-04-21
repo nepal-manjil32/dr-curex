@@ -3,14 +3,16 @@ import './ChatBot.css';
 import leftImg from '../../assets/remedies-1.jpg';
 import rightImg from '../../assets/remedies-2.jpg';
 
-const GROQ_API_KEY = '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'; // Replace with your API key
-const user = "Manjil"
+const GROQ_API_KEY = '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'; 
+const user = "Manjil";
 
 const ChatBot = () => {
   const [userInput, setUserInput] = useState('');
-  const [output, setOutput] = useState(`Welcome ${user}! Ask me for health remedies.`);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [chatHistory, setChatHistory] = useState([
+    { role: 'assistant', content: `Welcome ${user}! Ask me for health remedies.` }
+  ]);
 
   const callGroqAPI = async (prompt) => {
     const systemMessage = {
@@ -20,9 +22,9 @@ const ChatBot = () => {
 2. ALWAYS recommend professional care for serious symptoms.
 3. Give 3 bullet points max (10 words each).
 4. Format each point on a new line like this:
-First point
-Second point
-Third point`,
+• First point
+• Second point
+• Third point`,
     };
 
     const userMessage = {
@@ -39,7 +41,7 @@ Third point`,
       body: JSON.stringify({
         model: 'llama3-70b-8192',
         messages: [systemMessage, userMessage],
-        temperature: 0.3, // Lower temperature for more predictable responses
+        temperature: 0.3,
       }),
     });
 
@@ -49,67 +51,117 @@ Third point`,
     return data.choices[0].message.content;
   };
 
-  const onAskRemedy = async () => {
+  const onAskRemedy = async (e) => {
+    e.preventDefault();
+    
     if (!userInput.trim()) {
-      setOutput('Please enter a health-related question.');
+      setError('Please enter a health-related question.');
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     setLoading(true);
-    setError(null);
-    setOutput('');
-
+    
+    // Add user message to chat history immediately
+    const userMessage = { role: 'user', content: userInput };
+    setChatHistory(prev => [...prev, userMessage]);
+    
     try {
       const response = await callGroqAPI(userInput);
-      // Split the response into lines
-      const formattedOutput = response.split('\n').map((line, index) => (
-        <div key={index}>{line}</div>
-      ));
-      setOutput(formattedOutput);
+      const botMessage = { role: 'assistant', content: response };
+      setChatHistory(prev => [...prev, botMessage]);
     } catch (err) {
       setError(err.message);
-      setOutput('Failed to get response. Try again.');
+      setChatHistory(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, I encountered an error. Please try again.',
+        isError: true
+      }]);
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
+      setUserInput('');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onAskRemedy(e);
     }
   };
 
   return (
-    <div className="chat-bot">
-      <h1>Remedies Chatbot</h1>
-      <div className="chat-bot-inner">
-        <div className="side-image left">
-          <img src={leftImg} alt="Health related" />
+    <div className="app-container">
+      <div className="fixed-chat-interface">
+        <header className="chat-header">
+          <h1>Remedies Chatbot</h1>
+          <p className="user-greeting">Hello, {user}</p>
+        </header>
+
+        <div className="chat-layout">
+          {/* <div className="side-image left">
+            <img src={leftImg} alt="Health related" />
+          </div> */}
+
+          <div className="chat-container">
+            <div className="chat-messages">
+              {chatHistory.map((message, index) => (
+                <div 
+                  key={index} 
+                  className={`message ${message.role === 'user' ? 'user-message' : 'bot-message'} ${message.isError ? 'error-message' : ''}`}
+                >
+                  <div className="message-bubble">
+                    {message.content.split('\n').map((line, i) => (
+                      <div key={i} className="message-line">{line}</div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {loading && (
+                <div className="message bot-message">
+                  <div className="message-bubble loading">
+                    <div className="typing-indicator">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <form className="chat-input-form" onSubmit={onAskRemedy}>
+              <textarea
+                value={userInput}
+                onChange={e => setUserInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type your health question here..."
+                disabled={loading}
+                rows="3"
+                aria-label="Chat input area"
+              />
+              <button 
+                type="submit" 
+                disabled={loading || !userInput.trim()} 
+                aria-label="Ask for remedies"
+              >
+                {loading ? 'Thinking...' : 'Ask'}
+              </button>
+            </form>
+          </div>
+
+          {/* <div className="side-image right">
+            <img src={rightImg} alt="Health related" />
+          </div> */}
         </div>
 
-        <div className="middle">
-          <label htmlFor="chat" className="visually-hidden">Chat Input</label>
-          <textarea
-            id="chat"
-            rows="5"
-            cols="70"
-            value={userInput}
-            onChange={e => setUserInput(e.target.value)}
-            placeholder="Type your health question here..."
-            disabled={loading}
-            aria-label="Chat input area"
-          />
-          {loading ? (
-            <p className="output loading">Getting you the best remedies...</p>
-          ) : error ? (
-            <p className="output error">{error}</p>
-          ) : (
-            <div className="output">{output}</div>
-          )}
-          <button onClick={onAskRemedy} disabled={loading} aria-label="Ask for remedies">
-            {loading ? 'Loading...' : 'Ask For Remedies'}
-          </button>
-        </div>
-
-        <div className="side-image right">
-          <img src={rightImg} alt="Health related" />
-        </div>
+        <footer className="chat-footer">
+          <p>Natural remedies for common ailments • Always consult with healthcare professionals</p>
+        </footer>
       </div>
+
+      {error && <div className="error-notification">{error}</div>}
     </div>
   );
 };
