@@ -5,7 +5,7 @@ import { AppContext } from "../../context/AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Login.css";
-import doctor from '../../assets/dr.webp'
+import doctor from "../../assets/dr.webp";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,6 +16,10 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
+  const [bloodGroup, setBloodGroup] = useState("");
+  const [age, setAge] = useState("");
+  const [city, setCity] = useState("");
+  const [stateAddress, setStateAddress] = useState("");
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -23,12 +27,16 @@ const Login = () => {
       axios.defaults.withCredentials = true;
 
       if (state === "Sign Up") {
-        // Fixed: Changed reg_num to gender
+        
         const { data } = await axios.post(`${backendUrl}/api/user/register`, {
           name,
+          age,
+          gender,
+          bloodGroup,
+          city,
+          stateAddress,
           email,
           password,
-          gender,
         });
 
         if (data.success) {
@@ -87,6 +95,82 @@ const Login = () => {
                 </Form.Group>
               )}
 
+              {state === "Sign Up" && (
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="Age"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              )}
+
+              {state === "Sign Up" && (
+                <Form.Group className="mb-3">
+                  <Form.Select
+                    name="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled hidden>
+                      Select Gender
+                    </option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </Form.Select>
+                </Form.Group>
+              )}
+
+              {state === "Sign Up" && (
+                <Form.Group className="mb-3">
+                  <Form.Select
+                    name="bloodGroup"
+                    value={bloodGroup}
+                    onChange={(e) => setBloodGroup(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled hidden>
+                      Select Blood Group
+                    </option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </Form.Select>
+                </Form.Group>
+              )}
+
+              {state === "Sign Up" && (
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              )}
+
+              {state === "Sign Up" && (
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="State"
+                    value={stateAddress}
+                    onChange={(e) => setStateAddress(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+              )}
+
               <Form.Group className="mb-3">
                 <Form.Control
                   type="email"
@@ -106,19 +190,6 @@ const Login = () => {
                   required
                 />
               </Form.Group>
-
-              {state === "Sign Up" && (
-                <Form.Group className="mb-3">
-                  <Form.Control
-                    type="text"
-                    name="gender"
-                    placeholder="Gender"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-              )}
 
               <div className="login-button-div">
                 <Button type="submit" className="login-button">
