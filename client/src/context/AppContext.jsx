@@ -2,6 +2,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { data } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -32,20 +33,19 @@ export const AppContextProvider = (props) => {
 
   const getDoctorData = async () => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/appointment/data", {
+      const response = await axios.get(backendUrl + "/api/user/doctors", {
         withCredentials: true,
       });
-      if (data.success && data.doctorData) {
-        setDoctorData(data.doctorData);
-        console.log(doctorData)
-        setIsUserLoggedIn(true);
+      
+      // Changed from response.data.doctorData to response.data.doctors
+      if (response.data.success && response.data.doctors) {
+        setDoctorData(response.data.doctors);
       } else {
         setDoctorData(null);
-        setIsUserLoggedIn(false);
       }
     } catch (error) {
+      console.error("Error fetching doctors:", error);
       setDoctorData(null);
-      setIsUserLoggedIn(false);
     }
   };
 
