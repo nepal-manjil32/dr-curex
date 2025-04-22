@@ -1,4 +1,3 @@
-// src/context/AppContext.jsx
 import React, { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";

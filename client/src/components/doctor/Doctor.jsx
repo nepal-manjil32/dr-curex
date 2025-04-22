@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useContext } from 'react';
-import './Doctor.css';
-import { AppContext } from "../../context/AppContext";
-import axios from 'axios';
-=======
 import React, { useState, useEffect, useContext } from "react";
 import "./Doctor.css";
 import { AppContext } from "../../context/AppContext";
 import axios from "axios";
->>>>>>> 89d67df690cd5e8cee3d4ad614f5e377d6c94551
 
 const Doctor = () => {
   // Context for backend communication
@@ -26,21 +19,6 @@ const Doctor = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-<<<<<<< HEAD
-  // Get context data
-  const { backendUrl, doctorData, getDoctorData } = useContext(AppContext);
-  console.log(doctorData)
-  // Fetch doctor data on component mount
-  useEffect(() => {
-    const fetchDoctor = async () => {
-      await getDoctorData();
-      setLoading(false);
-    };
-    fetchDoctor();
-  }, []);
-  
-=======
->>>>>>> 89d67df690cd5e8cee3d4ad614f5e377d6c94551
   // Sample time slots
   const timeSlots = [
     "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
@@ -71,28 +49,11 @@ const Doctor = () => {
     fetchDoctors();
   }, []);
 
-<<<<<<< HEAD
-  // Fetch doctors from API
-  const fetchDoctors = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`${backendUrl}/api/appointment/all`, {
-        withCredentials: true
-      });
-      const data = response.data;
-      
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to fetch doctors');
-      }
-      
-      setDoctors(data.doctors);
-=======
   // Fetch doctors using the context
   const fetchDoctors = async () => {
     try {
       setLoading(true);
       await getDoctorData();
->>>>>>> 89d67df690cd5e8cee3d4ad614f5e377d6c94551
       setError(null);
     } catch (err) {
       setError('Failed to load doctors. Please try again later.');
@@ -106,21 +67,6 @@ const Doctor = () => {
   const bookAppointment = async (doctorId, appointmentData) => {
     try {
       setLoading(true);
-<<<<<<< HEAD
-      const response = await axios.post(`${backendUrl}/api/appointment/book`, {
-        doctorId,
-        ...appointmentData
-      }, {
-        withCredentials: true
-      });
-      
-      const data = response.data;
-      
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to book appointment');
-      }
-      
-=======
       const response = await axios.post(
         `${backendUrl}/api/user/doctors/${doctorId}/book`, 
         appointmentData,
@@ -133,7 +79,6 @@ const Doctor = () => {
         throw new Error(data.message || 'Failed to book appointment');
       }
 
->>>>>>> 89d67df690cd5e8cee3d4ad614f5e377d6c94551
       return data.appointment;
     } catch (err) {
       console.error('Error booking appointment:', err);
@@ -181,7 +126,7 @@ const Doctor = () => {
   };
 
   const handleBookAppointment = async () => {
-    if (!patientName || !patientPhone) return;
+    // if (!patientName || !patientPhone) return;
 
     try {
       // Prepare appointment data
@@ -277,11 +222,7 @@ const Doctor = () => {
 
                 <div className="doctor-footer">
                   <span className="availability-badge">
-<<<<<<< HEAD
-                    {doctor.currentAvailableSlots || doctor.availableSlots} slots available of {doctor.totalSlots}
-=======
                     {doctor.availableSlots} slots available of {doctor.totalSlots || 12}
->>>>>>> 89d67df690cd5e8cee3d4ad614f5e377d6c94551
                   </span>
                   <div className="rating">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -424,34 +365,11 @@ const Doctor = () => {
 
         <div className="patient-form">
           <h3 className="form-heading">Patient Information</h3>
-          <div className="form-group">
-            <label htmlFor="patientName">Full Name</label>
-            <input
-              type="text"
-              id="patientName"
-              value={patientName || (doctorData ? doctorData.name : '')}
-              onChange={(e) => setPatientName(e.target.value)}
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="patientPhone">Phone Number</label>
-            <input
-              type="tel"
-              id="patientPhone"
-              value={patientPhone || (doctorData ? doctorData.phone : '')}
-              onChange={(e) => setPatientPhone(e.target.value)}
-              placeholder="Enter your phone number"
-              required
-            />
-          </div>
-
+  
           <button
             className="confirm-button"
             onClick={handleBookAppointment}
-            disabled={!patientName || !patientPhone || loading}
+            // disabled={!patientName || !patientPhone || loading}
           >
             {loading ? 'Processing...' : 'Confirm Booking'}
           </button>
