@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Doctor.css';
+import { AppContext } from "../../context/AppContext";
+import axios from 'axios';
 
 const Doctor = () => {
   // States for component
@@ -12,66 +14,27 @@ const Doctor = () => {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [patientName, setPatientName] = useState("");
   const [patientPhone, setPatientPhone] = useState("");
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // API URL - you can put this in environment variables
-  const API_URL = '/api';
-
+  // Get context data
+  const { backendUrl, doctorData, getDoctorData } = useContext(AppContext);
+  console.log(doctorData)
+  // Fetch doctor data on component mount
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      await getDoctorData();
+      setLoading(false);
+    };
+    fetchDoctor();
+  }, []);
+  
   // Sample time slots
   const timeSlots = [
     "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", 
     "11:00 AM", "11:30 AM", "12:00 PM", "2:00 PM", 
     "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM"
   ];
-
-  // Fetch doctors from API
-  const fetchDoctors = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/doctors`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to fetch doctors');
-      }
-      
-      setDoctors(data.doctors);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load doctors. Please try again later.');
-      console.error('Error fetching doctors:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Book appointment API call
-  const bookAppointment = async (doctorId, appointmentData) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/doctors/${doctorId}/appointments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(appointmentData),
-      });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to book appointment');
-      }
-      
-      return data.appointment;
-    } catch (err) {
-      console.error('Error booking appointment:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Initialize data
   useEffect(() => {
@@ -95,6 +58,55 @@ const Doctor = () => {
     // Load doctors when component mounts
     fetchDoctors();
   }, []);
+
+  // Fetch doctors from API
+  const fetchDoctors = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${backendUrl}/api/appointment/all`, {
+        withCredentials: true
+      });
+      const data = response.data;
+      
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch doctors');
+      }
+      
+      setDoctors(data.doctors);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load doctors. Please try again later.');
+      console.error('Error fetching doctors:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Book appointment API call
+  const bookAppointment = async (doctorId, appointmentData) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`${backendUrl}/api/appointment/book`, {
+        doctorId,
+        ...appointmentData
+      }, {
+        withCredentials: true
+      });
+      
+      const data = response.data;
+      
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to book appointment');
+      }
+      
+      return data.appointment;
+    } catch (err) {
+      console.error('Error booking appointment:', err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSelectDoctor = (doctor) => {
     setSelectedDoctor(doctor);
@@ -215,7 +227,7 @@ const Doctor = () => {
           <div key={doctor._id} className="doctor-card">
             <div className="doctor-info">
               <div className="doctor-avatar">
-                <img src={doctor.image} alt={doctor.name} />
+                <img src={doctor.image || "/api/placeholder/80/80"} alt={doctor.name} />
               </div>
               
               <div className="doctor-details">
@@ -224,7 +236,7 @@ const Doctor = () => {
                 
                 <div className="doctor-metadata">
                   <div className="metadata-item">
-                    <span className="icon">★</span>
+                    <span className="icon">⭐</span>
                     <span>{doctor.experience} experience</span>
                   </div>
                   <div className="metadata-item">
@@ -239,7 +251,7 @@ const Doctor = () => {
                 
                 <div className="doctor-footer">
                   <span className="availability-badge">
-                    {doctor.availableSlots} slots available of {doctor.totalSlots}
+                    {doctor.currentAvailableSlots || doctor.availableSlots} slots available of {doctor.totalSlots}
                   </span>
                   <div className="rating">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -254,9 +266,9 @@ const Doctor = () => {
             <button 
               className="book-button"
               onClick={() => handleSelectDoctor(doctor)}
-              disabled={doctor.availableSlots <= 0}
+              disabled={doctor.currentAvailableSlots <= 0 || doctor.availableSlots <= 0}
             >
-              {doctor.availableSlots > 0 ? 'Book Appointment' : 'No Slots Available'}
+              {(doctor.currentAvailableSlots > 0 || doctor.availableSlots > 0) ? 'Book Appointment' : 'No Slots Available'}
             </button>
           </div>
         ))}
@@ -387,7 +399,7 @@ const Doctor = () => {
             <input
               type="text"
               id="patientName"
-              value={patientName}
+              value={patientName || (doctorData ? doctorData.name : '')}
               onChange={(e) => setPatientName(e.target.value)}
               placeholder="Enter your full name"
               required
@@ -399,7 +411,7 @@ const Doctor = () => {
             <input
               type="tel"
               id="patientPhone"
-              value={patientPhone}
+              value={patientPhone || (doctorData ? doctorData.phone : '')}
               onChange={(e) => setPatientPhone(e.target.value)}
               placeholder="Enter your phone number"
               required

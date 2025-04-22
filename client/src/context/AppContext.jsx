@@ -10,6 +10,7 @@ export const AppContextProvider = (props) => {
 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [doctorData, setDoctorData] = useState(null);
 
   const getUserData = async () => {
     try {
@@ -25,6 +26,25 @@ export const AppContextProvider = (props) => {
       }
     } catch (error) {
       setUserData(null);
+      setIsUserLoggedIn(false);
+    }
+  };
+
+  const getDoctorData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/appointment/data", {
+        withCredentials: true,
+      });
+      if (data.success && data.doctorData) {
+        setDoctorData(data.doctorData);
+        console.log(doctorData)
+        setIsUserLoggedIn(true);
+      } else {
+        setDoctorData(null);
+        setIsUserLoggedIn(false);
+      }
+    } catch (error) {
+      setDoctorData(null);
       setIsUserLoggedIn(false);
     }
   };
@@ -49,6 +69,9 @@ export const AppContextProvider = (props) => {
     setUserData,
     getUserData,
     logout,
+    getDoctorData,
+    doctorData,
+    setDoctorData,
   };
 
   return (

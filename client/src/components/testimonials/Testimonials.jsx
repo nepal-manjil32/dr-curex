@@ -235,7 +235,7 @@ const Testimonials = () => {
         
         <div className="testimonials-cta">
           <p>Join thousands of satisfied users today!</p>
-          <a href="/signup" className="testimonial-cta-button">Sign Up Now</a>
+          <a href="/login" className="testimonial-cta-button">Sign Up Now</a>
         </div>
       </div>
     </section>

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
+import doctorRouter from "./routes/doctorRoute.js";
 
 //configuration
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors({origin: allowedOrigins, credentials: true}));
 
 //endpoints
 app.use('/api/user', userRouter);
+app.use('/api/appointment', doctorRouter)
 
 
 app.listen(port, () => {

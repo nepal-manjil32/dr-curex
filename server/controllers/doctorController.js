@@ -2,7 +2,8 @@ import Doctor from '../models/doctorModel.js';
 
 const getDoctor = async (req, res) => {
     try {
-        const doctor = await Doctor.findById(req.user._id);
+        const { doctorId } = req.body;
+        const doctor = await Doctor.findOne({doctorId});
         
         if (!doctor) {
             return res.status(404).json({ 

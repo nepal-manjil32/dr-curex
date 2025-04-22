@@ -12,7 +12,7 @@ const News = () => {
     const fetchNews = async () => {
       try {
         setLoading(true);
-        // For Vite projects
+        
         const apiKey = import.meta.env.VITE_NEWS_API_KEY;
 
         if (!apiKey) {

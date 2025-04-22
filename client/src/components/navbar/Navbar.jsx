@@ -80,7 +80,7 @@ const Navbar = () => {
         {/* CTA buttons */}
         <div className="navbar__actions">
           <Link to="/login" className="navbar__button navbar__button--secondary">Login</Link>
-          <Link to="/signup" className="navbar__button navbar__button--primary">Sign up</Link>
+          <Link to="/login" className="navbar__button navbar__button--primary">Sign up</Link>
         </div>
       </div>
     </nav>
