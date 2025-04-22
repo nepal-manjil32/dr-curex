@@ -1,14 +1,19 @@
 // import express from 'express';
-// import {getUser, loginUser, registerUser, logout } from '../controllers/userController.js';
+// import { 
+//     getDoctor, 
+//     getAllDoctors, 
+//     bookAppointment, 
+//     getDoctorAppointments 
+// } from '../controllers/doctorController.js';
 // import userAuth from '../middleware/userAuth.js';
 
 // const doctorRouter = express.Router();
 
-// userRouter.get('/data',userAuth, getUser)
-// userRouter.post('/register', registerUser);
-// userRouter.post('/login', loginUser);
-// userRouter.post('/logout',userAuth, logout);
-// // userRouter.post('/verify-account', userAuth, verifyEmail);
-// // userRouter.post('/is-auth', userAuth, isAuthenticated);
+// // Public routes
+// doctorRouter.get('/', getAllDoctors);
 
-// export default userRouter;
+// // Protected routes (assuming you'll have doctor authentication)
+// doctorRouter.get('/profile', userAuth, getDoctor);
+// doctorRouter.get('/appointments', userAuth, getDoctorAppointments);
+
+// export default doctorRouter;

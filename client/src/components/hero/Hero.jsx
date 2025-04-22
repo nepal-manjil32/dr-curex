@@ -18,7 +18,7 @@ const Hero = () => {
             Healthcare Recommendations Instantly.
           </h4>
           <div className="hero__buttons">
-            <Link to="/register" className="hero__button hero__button--primary">
+            <Link to="/login" className="hero__button hero__button--primary">
               Get Started
             </Link>
             <Link to="/about" className="hero__button hero__button--secondary">

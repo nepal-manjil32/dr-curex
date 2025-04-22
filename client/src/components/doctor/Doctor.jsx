@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import './Doctor.css';
+import React, { useState, useEffect, useContext } from "react";
+import "./Doctor.css";
+import { AppContext } from "../../context/AppContext";
+import axios from "axios";
 
 const Doctor = () => {
+  // Context for backend communication
+  const { doctorData, getDoctorData, backendUrl } = useContext(AppContext);
+
   // States for component
-  const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -15,63 +19,12 @@ const Doctor = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // API URL - you can put this in environment variables
-  const API_URL = '/api';
-
   // Sample time slots
   const timeSlots = [
-    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", 
-    "11:00 AM", "11:30 AM", "12:00 PM", "2:00 PM", 
+    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
+    "11:00 AM", "11:30 AM", "12:00 PM", "2:00 PM",
     "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM"
   ];
-
-  // Fetch doctors from API
-  const fetchDoctors = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/doctors`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to fetch doctors');
-      }
-      
-      setDoctors(data.doctors);
-      setError(null);
-    } catch (err) {
-      setError('Failed to load doctors. Please try again later.');
-      console.error('Error fetching doctors:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Book appointment API call
-  const bookAppointment = async (doctorId, appointmentData) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/doctors/${doctorId}/appointments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(appointmentData),
-      });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.message || 'Failed to book appointment');
-      }
-      
-      return data.appointment;
-    } catch (err) {
-      console.error('Error booking appointment:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Initialize data
   useEffect(() => {
@@ -89,12 +42,51 @@ const Doctor = () => {
       }
       return dateArray;
     };
-    
+
     setDates(getNextSevenDays());
-    
+
     // Load doctors when component mounts
     fetchDoctors();
   }, []);
+
+  // Fetch doctors using the context
+  const fetchDoctors = async () => {
+    try {
+      setLoading(true);
+      await getDoctorData();
+      setError(null);
+    } catch (err) {
+      setError('Failed to load doctors. Please try again later.');
+      console.error('Error fetching doctors:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Book appointment API call
+  const bookAppointment = async (doctorId, appointmentData) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${backendUrl}/api/user/doctors/${doctorId}/book`, 
+        appointmentData,
+        { withCredentials: true }
+      );
+
+      const data = response.data;
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to book appointment');
+      }
+
+      return data.appointment;
+    } catch (err) {
+      console.error('Error booking appointment:', err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSelectDoctor = (doctor) => {
     setSelectedDoctor(doctor);
@@ -135,7 +127,7 @@ const Doctor = () => {
 
   const handleBookAppointment = async () => {
     if (!patientName || !patientPhone) return;
-    
+
     try {
       // Prepare appointment data
       const appointmentData = {
@@ -144,25 +136,16 @@ const Doctor = () => {
         date: selectedDate.date.toISOString(),
         time: selectedTime
       };
-      
+
       // Book the appointment via API
       await bookAppointment(selectedDoctor._id, appointmentData);
+
+      // Refresh doctor data to get updated availability
+      await getDoctorData();
       
-      // Update local state to reflect the booking
-      const updatedDoctors = doctors.map(doctor => {
-        if (doctor._id === selectedDoctor._id) {
-          return {
-            ...doctor,
-            availableSlots: doctor.availableSlots - 1,
-          };
-        }
-        return doctor;
-      });
-      
-      setDoctors(updatedDoctors);
       setBookingSuccess(true);
       setError(null);
-      
+
       // Reset form fields
       setPatientName("");
       setPatientPhone("");
@@ -175,7 +158,7 @@ const Doctor = () => {
   // Check if a slot is already booked
   const isSlotBooked = (date, time) => {
     if (!selectedDoctor || !selectedDoctor.appointments) return false;
-    
+
     return selectedDoctor.appointments.some(appointment => {
       const appointmentDate = new Date(appointment.date).toDateString();
       const slotDate = date.date.toDateString();
@@ -186,7 +169,7 @@ const Doctor = () => {
   // Filter available times for the selected date
   const getAvailableTimes = () => {
     if (!selectedDate || !selectedDoctor) return [];
-    
+
     return timeSlots.filter(time => !isSlotBooked(selectedDate, time));
   };
 
@@ -195,7 +178,7 @@ const Doctor = () => {
     if (loading) {
       return <div className="loading-state">Loading doctors...</div>;
     }
-    
+
     if (error) {
       return (
         <div className="error-state">
@@ -204,24 +187,24 @@ const Doctor = () => {
         </div>
       );
     }
-    
-    if (doctors.length === 0) {
+
+    if (!doctorData || doctorData.length === 0) {
       return <div className="no-data-state">No doctors available at the moment.</div>;
     }
-    
+
     return (
       <div className="doctor-list">
-        {doctors.map(doctor => (
+        {doctorData.map(doctor => (
           <div key={doctor._id} className="doctor-card">
             <div className="doctor-info">
               <div className="doctor-avatar">
                 <img src={doctor.image} alt={doctor.name} />
               </div>
-              
+
               <div className="doctor-details">
                 <h3 className="doctor-name">{doctor.name}</h3>
                 <p className="doctor-specialization">{doctor.specialization}</p>
-                
+
                 <div className="doctor-metadata">
                   <div className="metadata-item">
                     <span className="icon">★</span>
@@ -236,10 +219,10 @@ const Doctor = () => {
                     <span>{doctor.phone}</span>
                   </div>
                 </div>
-                
+
                 <div className="doctor-footer">
                   <span className="availability-badge">
-                    {doctor.availableSlots} slots available of {doctor.totalSlots}
+                    {doctor.availableSlots} slots available of {doctor.totalSlots || 12}
                   </span>
                   <div className="rating">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -250,8 +233,8 @@ const Doctor = () => {
                 </div>
               </div>
             </div>
-            
-            <button 
+
+            <button
               className="book-button"
               onClick={() => handleSelectDoctor(doctor)}
               disabled={doctor.availableSlots <= 0}
@@ -267,11 +250,11 @@ const Doctor = () => {
   // Render scheduling step (Step 2)
   const renderScheduling = () => {
     const availableTimes = getAvailableTimes();
-    
+
     if (loading) {
       return <div className="loading-state">Loading schedule...</div>;
     }
-    
+
     return (
       <div className="scheduling-container">
         <div className="scheduling-header">
@@ -280,9 +263,9 @@ const Doctor = () => {
           </button>
           <h2 className="section-heading">Schedule with {selectedDoctor.name}</h2>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <div className="scheduling-options">
           <div>
             <h3 className="subsection-heading">
@@ -290,8 +273,8 @@ const Doctor = () => {
             </h3>
             <div className="date-selector">
               {dates.map((date, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className={`date-option ${selectedDate === date ? 'selected' : ''}`}
                   onClick={() => handleSelectDate(date)}
                 >
@@ -301,7 +284,7 @@ const Doctor = () => {
               ))}
             </div>
           </div>
-          
+
           {selectedDate && (
             <div>
               <h3 className="subsection-heading">
@@ -310,8 +293,8 @@ const Doctor = () => {
               {availableTimes.length > 0 ? (
                 <div className="time-selector">
                   {availableTimes.map((time, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className={`time-option ${selectedTime === time ? 'selected' : ''}`}
                       onClick={() => handleSelectTime(time)}
                     >
@@ -325,9 +308,9 @@ const Doctor = () => {
             </div>
           )}
         </div>
-        
+
         <div className="form-actions">
-          <button 
+          <button
             className="continue-button"
             onClick={handleContinueToForm}
             disabled={!selectedDate || !selectedTime}
@@ -358,7 +341,7 @@ const Doctor = () => {
         </div>
       );
     }
-    
+
     return (
       <div className="form-container">
         <div className="form-header">
@@ -367,9 +350,9 @@ const Doctor = () => {
           </button>
           <h2 className="section-heading">Complete Your Booking</h2>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <div className="appointment-summary">
           <h3 className="summary-heading">Appointment Details</h3>
           <div className="summary-grid">
@@ -379,7 +362,7 @@ const Doctor = () => {
             <p><strong>Time:</strong> {selectedTime}</p>
           </div>
         </div>
-        
+
         <div className="patient-form">
           <h3 className="form-heading">Patient Information</h3>
           <div className="form-group">
@@ -393,7 +376,7 @@ const Doctor = () => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="patientPhone">Phone Number</label>
             <input
@@ -405,8 +388,8 @@ const Doctor = () => {
               required
             />
           </div>
-          
-          <button 
+
+          <button
             className="confirm-button"
             onClick={handleBookAppointment}
             disabled={!patientName || !patientPhone || loading}
@@ -452,3 +435,37 @@ const Doctor = () => {
 };
 
 export default Doctor;
+
+// const Doctor = () => {
+//   const { doctorData, getDoctorData } = useContext(AppContext);
+
+//   useEffect(() => {
+//     getDoctorData();
+//   }, [getDoctorData]);
+
+//   if (!doctorData || doctorData.length === 0) {
+//     return <p>No doctors found.</p>;
+//   }
+
+//   return (
+//     <div className="doctor-list">
+//       {doctorData.map((doctor) => (
+//         <div className="doctor-card" key={doctor._id}>
+//           <img src={doctor.image} alt={doctor.name} />
+//           <h3>{doctor.name}</h3>
+//           <p><strong>Gender:</strong> {doctor.gender}</p>
+//           <p><strong>Available Slots:</strong> {doctor.availableSlots}</p>
+//           <p><strong>Experience:</strong> {doctor.experience}</p>
+//           {/* Example of manipulating data: */}
+//           <p>
+//             <strong>Status:</strong>{" "}
+//             {doctor.availableSlots > 0 ? "Available" : "Fully Booked"}
+//           </p>
+//           {/* Add more fields as needed */}
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default Doctor;

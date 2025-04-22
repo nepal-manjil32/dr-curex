@@ -8,7 +8,7 @@ function NearbyHospitals() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedHospital, setSelectedHospital] = useState(null);
-  const [radius, setRadius] = useState(10); // Default 10km radius
+  const [radius, setRadius] = useState(10); 
   const [searchTriggered, setSearchTriggered] = useState(false);
 
   // Get user location on mount
@@ -25,7 +25,7 @@ function NearbyHospitals() {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
         });
-        setSearchTriggered(true); // Auto-search on first load
+        setSearchTriggered(true);
       },
       () => {
         setError('Unable to retrieve your location');
@@ -58,7 +58,7 @@ function NearbyHospitals() {
       try {
         const response = await fetch(url, {
           headers: {
-            'User-Agent': 'DrCureX/1.0 (sunitsoni915@gmail.com)', // Required by Nominatim usage policy
+            'User-Agent': 'DrCureX/1.0 (sunitsoni915@gmail.com)', 
             'Accept-Language': 'en',
           },
         });
