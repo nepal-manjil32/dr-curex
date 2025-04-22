@@ -14,8 +14,8 @@ const ProfileCard = (props) => {
       
       <div className="profile-details">
         <div className="detail-item">
-          <span className="detail-label">Date of Birth</span>
-          <span className="detail-value">{props.dob}</span>
+          <span className="detail-label">Age</span>
+          <span className="detail-value">{props.age}</span>
         </div>
         
         <div className="detail-item">

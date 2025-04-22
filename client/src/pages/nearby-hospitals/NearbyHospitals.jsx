@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './NearbyHospitals.css';
+import { MapPin, Activity, Navigation, AlertCircle, Loader, Search } from 'lucide-react';
 
 function NearbyHospitals() {
   const [location, setLocation] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [radius, setRadius] = useState(10); // Default 10km radius
+  const [searchTriggered, setSearchTriggered] = useState(false);
 
   // Get user location on mount
   useEffect(() => {
@@ -21,6 +25,7 @@ function NearbyHospitals() {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
         });
+        setSearchTriggered(true); // Auto-search on first load
       },
       () => {
         setError('Unable to retrieve your location');
@@ -29,19 +34,21 @@ function NearbyHospitals() {
     );
   }, []);
 
-  // Fetch hospitals when location is set
+  // Fetch hospitals when location is set and search is triggered
   useEffect(() => {
-    if (!location) return;
+    if (!location || !searchTriggered) return;
 
     const fetchHospitals = async () => {
       setLoading(true);
       setError(null);
 
+      // Convert radius to approx. coordinate delta (rough approximation)
+      // 0.01 degrees is approx 1.11km at the equator
+      const delta = (radius * 0.01) / 1.11;
+      
       // Nominatim search for hospitals near user location
-      // We'll use a bounding box of ~0.05 degrees (~5km) around user location
       const lat = location.lat;
       const lon = location.lon;
-      const delta = 0.1; // ~10km
 
       // Bounding box: left, top, right, bottom
       const viewbox = `${lon - delta},${lat + delta},${lon + delta},${lat - delta}`;
@@ -62,8 +69,8 @@ function NearbyHospitals() {
 
         const data = await response.json();
 
-        // Optional: sort by distance from user location
-        const sorted = data
+        // Filter by actual distance to ensure we only get hospitals within the radius
+        const filtered = data
           .map((item) => ({
             ...item,
             distance: getDistanceFromLatLonInKm(
@@ -73,18 +80,20 @@ function NearbyHospitals() {
               parseFloat(item.lon)
             ),
           }))
+          .filter(item => item.distance <= radius)
           .sort((a, b) => a.distance - b.distance);
 
-        setHospitals(sorted);
+        setHospitals(filtered);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
+        setSearchTriggered(false);
       }
     };
 
     fetchHospitals();
-  }, [location]);
+  }, [location, searchTriggered, radius]);
 
   // Helper: Calculate distance between two lat/lon points in km
   function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -102,26 +111,134 @@ function NearbyHospitals() {
     return R * c;
   }
 
-  if (loading) return <div className="loading">Loading nearby hospitals...</div>;
-  if (error) return <div className="error">{error}</div>;
+  // Open in Google Maps
+  const openInMaps = (hospital) => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      hospital.display_name
+    )}`;
+    window.open(url, '_blank');
+  };
+
+  // Format address for display
+  const formatAddress = (fullAddress) => {
+    const parts = fullAddress.split(',');
+    return parts.slice(1, 5).join(',');
+  };
+
+  // Handle search button click
+  const handleSearch = () => {
+    setSearchTriggered(true);
+    setSelectedHospital(null);
+  };
+
+  // Predefined radius options
+  const radiusOptions = [
+    { value: 2, label: '2 km' },
+    { value: 5, label: '5 km' },
+    { value: 10, label: '10 km' },
+    { value: 25, label: '25 km' },
+    { value: 50, label: '50 km' },
+  ];
+
+  if (!location && loading) {
+    return (
+      <div className="loading-container">
+        <Loader className="loader-icon" />
+        <p>Getting your location...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <AlertCircle className="error-icon" />
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="nearby-hospitals-container">
-      <h2>Nearby Hospitals & Health Services</h2>
-      {hospitals.length === 0 ? (
-        <p>No hospitals found nearby.</p>
+      <div className="hospitals-header">
+        <Activity className="header-icon" />
+        <h1>Nearby Hospitals & Health Services</h1>
+      </div>
+      
+      <div className="search-controls">
+        <div className="radius-selector">
+          <label htmlFor="radius-select">Search radius:</label>
+          <select 
+            id="radius-select" 
+            value={radius}
+            onChange={(e) => setRadius(Number(e.target.value))}
+          >
+            {radiusOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button className="search-button" onClick={handleSearch}>
+          <Search className="search-icon" />
+          Search
+        </button>
+      </div>
+      
+      {loading ? (
+        <div className="loading-container">
+          <Loader className="loader-icon" />
+          <p>Searching for hospitals within {radius} km...</p>
+        </div>
       ) : (
-        <ul className="hospital-list">
-          {hospitals.map((hospital) => (
-            <li key={hospital.place_id} className="hospital-item">
-              <h3>{hospital.display_name.split(',')[0]}</h3>
-              <p>{hospital.display_name}</p>
-              <p>
-                Distance: {hospital.distance.toFixed(2)} km
-              </p>
-            </li>
-          ))}
-        </ul>
+        <>
+          {hospitals.length === 0 ? (
+            <div className="no-results">
+              <p>No hospitals found within {radius} km of your location.</p>
+              <p className="sub-message">Try increasing your search radius or check your location settings.</p>
+            </div>
+          ) : (
+            <>
+              <div className="result-count">
+                Found <span>{hospitals.length}</span> health facilities within {radius} km
+              </div>
+              
+              <ul className="hospital-list">
+                {hospitals.map((hospital) => (
+                  <li 
+                    key={hospital.place_id} 
+                    className={`hospital-card ${selectedHospital === hospital.place_id ? 'selected' : ''}`}
+                    onClick={() => setSelectedHospital(hospital.place_id)}
+                  >
+                    <div className="hospital-content">
+                      <h3>{hospital.display_name.split(',')[0]}</h3>
+                      <p className="hospital-address">
+                        <MapPin className="card-icon" />
+                        {formatAddress(hospital.display_name)}
+                      </p>
+                      <div className="hospital-meta">
+                        <span className="distance">
+                          <Navigation className="card-icon" />
+                          {hospital.distance.toFixed(1)} km away
+                        </span>
+                      </div>
+                    </div>
+                    <button 
+                      className="directions-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openInMaps(hospital);
+                      }}
+                    >
+                      Get Directions
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
       )}
     </div>
   );
