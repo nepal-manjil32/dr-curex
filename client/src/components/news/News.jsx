@@ -20,7 +20,7 @@ const News = () => {
         }
 
         const response = await axios.get(
-          `https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=${apiKey}`
+          `USE YOUR API HERE=${apiKey}`
         );
         
         if (response.data.articles.length === 0) {

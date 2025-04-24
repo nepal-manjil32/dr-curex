@@ -108,14 +108,14 @@ const Dashboard = () => {
             <Appointment
               date="Mon, Apr 21"
               time="12:00 PM"
-              doctor="Dr. Stephen Hawking"
+              doctor="Dr. Henry Kissinger"
               location="London Road, London"
-              desc="Piles"
+              desc="Physical Checkup"
             />
             <Appointment
               date="Mon, Apr 21"
               time="12:00 PM"
-              doctor="Dr. Donald Trump"
+              doctor="Dr. Joshep Gaugen"
               desc="Piles"
               location="Washington DC, Columbia"
               id="APT-00123"
@@ -123,8 +123,8 @@ const Dashboard = () => {
             <Appointment
               date="Mon, Apr 21"
               time="12:00 PM"
-              doctor="Dr. Vladimir Putin"
-              desc="Piles"
+              doctor="Dr. Menet Kenly"
+              desc="Cancer"
               location="Kremlin, Saint Petersburg"
               id="APT-00124"
             />

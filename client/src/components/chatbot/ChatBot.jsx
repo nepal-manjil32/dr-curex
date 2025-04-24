@@ -32,7 +32,7 @@ const ChatBot = () => {
       content: prompt
     };
 
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch('USE YOUR API HERE', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${GROQ_API_KEY}`,
