@@ -12,6 +12,17 @@
 <h2>Doctor Appointment Booking</h2>
 <img src="client/src/assets/dr-appointment.png"/>
 
+---
+
+## 🚀 Technology Stack
+
+- **Frontend**: React.js 
+- **Backend**: Express.js, RESTful API 
+- **Database**: MongoDB 
+- **Authentication**: JWT with role-based access control
+- **AI Integration**: GROQ API 
+
+---
 
 ## 📦 Installation Guide  
 
@@ -26,5 +37,7 @@ npm i
 ```
 ### 3️⃣ Start the Development Server
 ```sh
-npm run dev
+npm run dev -> Client Side
+nodemon server.js -> Server Side
 ```
+
